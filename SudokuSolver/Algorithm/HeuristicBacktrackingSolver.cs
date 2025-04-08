@@ -5,11 +5,19 @@ using System.Linq;
 
 namespace SudokuSolver.Algorithm
 {
-    public class HeuristicSearch : BaseSolver
+    public class HeuristicBacktrackingSolver : BaseSolver
     {
         public override (bool solved, TimeSpan timeTaken) Solve(int[,] board)
         {
             var stopwatch = Stopwatch.StartNew();
+
+            // Check if the initial board is valid
+            if (!IsBoardInitiallyValid(board))
+            {
+                stopwatch.Stop();
+                return (false, stopwatch.Elapsed); // Return immediately if invalid
+            }
+
             bool result = SolveSudoku(board);
             stopwatch.Stop();
             return (result, stopwatch.Elapsed);
@@ -152,7 +160,8 @@ namespace SudokuSolver.Algorithm
         private List<int> OrderValuesByFrequency(int[,] board, (int row, int col, List<int> possibleValues) cell)
         {
             var frequency = new Dictionary<int, int>();
-            foreach (int num in cell.possibleValues)
+            // Initialize with all possible Sudoku numbers (1-9)
+            for (int num = 1; num <= Size; num++)
             {
                 frequency[num] = 0;
             }
@@ -189,7 +198,7 @@ namespace SudokuSolver.Algorithm
                 }
             }
 
-            // Order by frequency (ascending) to try least used values first
+            // Order by frequency (ascending) among the cell's possible values
             return cell.possibleValues.OrderBy(num => frequency[num]).ToList();
         }
     }

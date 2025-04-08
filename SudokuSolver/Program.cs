@@ -60,8 +60,8 @@ namespace SudokuSolver
             Console.WriteLine("1. Backtracking");
             Console.WriteLine("2. Constraint Propagation");
             Console.WriteLine("3. Dancing Links");
-            Console.WriteLine("4. Bubble Sort (by possibilities)");
-            Console.WriteLine("5. Heuristic Search");
+            Console.WriteLine("4. Possibility Sort");
+            Console.WriteLine("5. Heuristic Backtracking");
             Console.WriteLine("6. Brute Force");
             Console.Write("Enter your choice: ");
 
@@ -76,8 +76,8 @@ namespace SudokuSolver
                 1 => new BacktrackingSolver(),
                 2 => new ConstraintPropagationSolver(),
                 3 => new DancingLinksSolver(),
-                4 => new BubbleSort(),
-                5 => new HeuristicSearch(),
+                4 => new PossibilitySortSolver(),
+                5 => new HeuristicBacktrackingSolver(),
                 6 => new BruteForceSolver(),
                 _ => throw new InvalidOperationException("Invalid solver choice")
             };
@@ -121,8 +121,8 @@ namespace SudokuSolver
                 new BacktrackingSolver(),
                 new ConstraintPropagationSolver(),
                 new DancingLinksSolver(),
-                new BubbleSort(),
-                new HeuristicSearch(),
+                new PossibilitySortSolver(),
+                new HeuristicBacktrackingSolver(),
                 new BruteForceSolver()
             };
 

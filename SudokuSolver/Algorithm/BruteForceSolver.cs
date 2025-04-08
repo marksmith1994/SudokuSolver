@@ -5,12 +5,17 @@ namespace SudokuSolver.Algorithm
 {
     public class BruteForceSolver : BaseSolver
     {
-        private const int Size = 9;
-        private const int SubgridSize = 3;
-
         public override (bool solved, TimeSpan timeTaken) Solve(int[,] board)
         {
             var stopwatch = Stopwatch.StartNew();
+
+            // Check if the initial board is valid
+            if (!IsBoardInitiallyValid(board))
+            {
+                stopwatch.Stop();
+                return (false, stopwatch.Elapsed); // Return immediately if invalid
+            }
+
             bool result = SolveBruteForce(board);
             stopwatch.Stop();
             return (result, stopwatch.Elapsed);

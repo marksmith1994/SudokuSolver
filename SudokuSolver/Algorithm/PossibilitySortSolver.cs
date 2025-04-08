@@ -4,11 +4,19 @@ using System.Collections.Generic;
 
 namespace SudokuSolver.Algorithm
 {
-    public class BubbleSort : BaseSolver
+    public class PossibilitySortSolver : BaseSolver
     {
         public override (bool solved, TimeSpan timeTaken) Solve(int[,] board)
         {
             var stopwatch = Stopwatch.StartNew();
+
+            // Check if the initial board is valid
+            if (!IsBoardInitiallyValid(board))
+            {
+                stopwatch.Stop();
+                return (false, stopwatch.Elapsed); // Return immediately if invalid
+            }
+
             bool result = SolveSudoku(board);
             stopwatch.Stop();
             return (result, stopwatch.Elapsed);
