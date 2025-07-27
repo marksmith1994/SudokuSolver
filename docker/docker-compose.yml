@@ -1,0 +1,50 @@
+services:
+  # Angular Frontend
+  sudoku-solver-ui:
+    container_name: sudoku-solver-ui
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.angular
+    ports:
+      - "4200:4200"
+    volumes:
+      # Mount source code for hot reloading
+      - ../sudoku-ui:/app
+      - /app/node_modules
+      - /app/.angular
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    networks:
+      - sudoku-solver-network
+    depends_on:
+      - sudoku-solver-api
+
+  # C# API Backend
+  sudoku-solver-api:
+    container_name: sudoku-solver-api
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    ports:
+      - "5001:5000"
+    volumes:
+      # Mount source code for hot reloading
+      - ../SudokuSolver:/src/SudokuSolver
+      - ../SudokuSolver.API:/src/SudokuSolver.API
+      - ../SudoukuSolver.Tests:/src/SudoukuSolver.Tests
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+      - DOTNET_USE_POLLING_FILE_WATCHER=true
+    networks:
+      - sudoku-solver-network
+
+networks:
+  sudoku-solver-network:
+    name: sudoku-solver-network
+    driver: bridge
+
+volumes:
+  node_modules: 

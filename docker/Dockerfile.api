@@ -1,0 +1,26 @@
+# Use .NET 8 SDK for development
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+
+# Set working directory
+WORKDIR /src
+
+# Copy solution and project files
+COPY *.sln ./
+COPY SudokuSolver/*.csproj ./SudokuSolver/
+COPY SudokuSolver.API/*.csproj ./SudokuSolver.API/
+COPY SudoukuSolver.Tests/*.csproj ./SudoukuSolver.Tests/
+
+# Restore dependencies
+RUN dotnet restore
+
+# Expose port
+EXPOSE 5000
+
+# Set environment variables for development
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_URLS=http://+:5000
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
+
+# Start the API in development mode with hot reloading
+WORKDIR /src/SudokuSolver.API
+ENTRYPOINT ["dotnet", "watch", "run", "--no-launch-profile"] 

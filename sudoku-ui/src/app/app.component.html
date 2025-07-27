@@ -1,0 +1,48 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+  <div class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Header -->
+    <header class="text-center mb-12">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mb-4">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+      <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-3">{{ title }}</h1>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">Compare multiple Sudoku solving algorithms in real-time. Test different puzzles and see which algorithm performs best.</p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+      <!-- Left Column - Puzzle Input -->
+      <div class="xl:col-span-2 space-y-6">
+        <app-sudoku-board 
+          [board]="currentBoard"
+          (boardChange)="onBoardChange($event)">
+        </app-sudoku-board>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <app-file-upload 
+            (boardLoaded)="onFileLoaded($event)">
+          </app-file-upload>
+          
+          <app-algorithm-selector 
+            (solveRequest)="onSolveRequest($event)">
+          </app-algorithm-selector>
+        </div>
+      </div>
+
+      <!-- Right Column - Results -->
+      <div class="xl:col-span-1">
+        <app-results-display 
+          [results]="results"
+          [isSolving]="isSolving">
+        </app-results-display>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-16 text-center text-gray-500 text-sm">
+      <p>Built with Angular, .NET, and Docker • Multiple Sudoku solving algorithms</p>
+    </footer>
+  </div>
+</div> 

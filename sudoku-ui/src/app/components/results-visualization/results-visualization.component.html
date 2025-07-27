@@ -1,0 +1,166 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+        Algorithm Visualization
+      </h1>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        Watch how different algorithms solve the same puzzle in real-time. 
+        See the step-by-step process and understand how each algorithm works.
+      </p>
+    </div>
+
+    <!-- Global Controls -->
+    <div class="bg-white rounded-xl shadow-xl p-6 mb-8 border border-gray-100">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Global Controls</h2>
+        <div class="flex items-center space-x-4">
+          <button 
+            (click)="playAll()"
+            [disabled]="isGlobalPlaying"
+            class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Play All
+          </button>
+          <button 
+            (click)="pauseAll()"
+            [disabled]="!isGlobalPlaying"
+            class="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Pause All
+          </button>
+          <button 
+            (click)="resetAll()"
+            class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all duration-200 font-semibold">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Reset All
+          </button>
+        </div>
+      </div>
+
+      <!-- Speed Control -->
+      <div class="flex items-center space-x-4">
+        <label class="text-sm font-semibold text-gray-700">Speed:</label>
+        <div class="flex space-x-2">
+          <button 
+            (click)="setSpeed(0.5)"
+            [class]="globalSpeed === 0.5 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'"
+            class="px-3 py-1 rounded text-sm font-medium transition-all duration-200">
+            0.5x
+          </button>
+          <button 
+            (click)="setSpeed(1)"
+            [class]="globalSpeed === 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'"
+            class="px-3 py-1 rounded text-sm font-medium transition-all duration-200">
+            1x
+          </button>
+          <button 
+            (click)="setSpeed(2)"
+            [class]="globalSpeed === 2 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'"
+            class="px-3 py-1 rounded text-sm font-medium transition-all duration-200">
+            2x
+          </button>
+          <button 
+            (click)="setSpeed(5)"
+            [class]="globalSpeed === 5 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'"
+            class="px-3 py-1 rounded text-sm font-medium transition-all duration-200">
+            5x
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Algorithm Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+      <div 
+        *ngFor="let algorithm of algorithms"
+        class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+        
+        <!-- Algorithm Header -->
+        <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-4 text-white">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-bold">{{ formatAlgorithmName(algorithm.algorithm) }}</h3>
+            <div class="flex items-center space-x-2">
+              <button 
+                (click)="playAlgorithm(algorithm.algorithm)"
+                [disabled]="algorithm.isPlaying"
+                class="p-2 bg-white bg-opacity-20 rounded hover:bg-opacity-30 disabled:opacity-50 transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </button>
+              <button 
+                (click)="pauseAlgorithm(algorithm.algorithm)"
+                [disabled]="!algorithm.isPlaying"
+                class="p-2 bg-white bg-opacity-20 rounded hover:bg-opacity-30 disabled:opacity-50 transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </button>
+              <button 
+                (click)="resetAlgorithm(algorithm.algorithm)"
+                class="p-2 bg-white bg-opacity-20 rounded hover:bg-opacity-30 transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="p-4 border-b border-gray-100">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-gray-700">Progress</span>
+            <span class="text-sm text-gray-500">{{ algorithm.currentStep }} / {{ algorithm.totalSteps }}</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div 
+              class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-300"
+              [style.width.%]="getProgress(algorithm.algorithm)">
+            </div>
+          </div>
+        </div>
+
+        <!-- Sudoku Board -->
+        <div class="p-4">
+          <div class="grid grid-cols-9 gap-0 bg-gray-800 p-2 rounded-lg shadow-inner">
+            <ng-container *ngFor="let row of getCurrentBoard(algorithm.algorithm); let rowIndex = index">
+              <ng-container *ngFor="let cell of row; let colIndex = index">
+                <div class="w-8 h-8 bg-white text-gray-800 text-center text-sm font-bold flex items-center justify-center border border-gray-200">
+                  {{ cell === 0 ? '·' : cell }}
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="p-4 bg-gray-50 border-t border-gray-100">
+          <p class="text-sm text-gray-700 font-medium">
+            {{ getCurrentDescription(algorithm.algorithm) }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="text-center mt-8">
+      <button 
+        routerLink="/"
+        class="px-8 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all duration-200 font-semibold">
+        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Solver
+      </button>
+    </div>
+  </div>
+</div> 
