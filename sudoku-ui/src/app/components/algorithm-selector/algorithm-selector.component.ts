@@ -9,8 +9,7 @@ export interface Algorithm {
 
 @Component({
   selector: 'app-algorithm-selector',
-  templateUrl: './algorithm-selector.component.html',
-  styleUrls: ['./algorithm-selector.component.css']
+  templateUrl: './algorithm-selector.component.html'
 })
 export class AlgorithmSelectorComponent implements OnInit {
   @Output() solveRequest = new EventEmitter<{algorithm: string, compareAll: boolean}>();
@@ -101,9 +100,6 @@ export class AlgorithmSelectorComponent implements OnInit {
   }
 
   solve(): void {
-    console.log('Algorithm selector solve called');
-    console.log('Selected algorithm:', this.selectedAlgorithm);
-    console.log('Compare all:', this.compareAll);
     this.solveRequest.emit({
       algorithm: this.selectedAlgorithm,
       compareAll: this.compareAll

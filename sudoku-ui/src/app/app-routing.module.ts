@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './components/home/home.component';
 import { ResultsVisualizationComponent } from './components/results-visualization/results-visualization.component';
 
 const routes: Routes = [
-  { path: 'visualization', component: ResultsVisualizationComponent },
-  { path: '', redirectTo: '/', pathMatch: 'full' }
+  { path: '', component: HomeComponent },
+  { path: 'home', component: HomeComponent },
+  { path: 'visualization', component: ResultsVisualizationComponent }
 ];
 
 @NgModule({

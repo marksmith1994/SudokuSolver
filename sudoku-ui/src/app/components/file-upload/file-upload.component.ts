@@ -2,8 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-file-upload',
-  templateUrl: './file-upload.component.html',
-  styleUrls: ['./file-upload.component.css']
+  templateUrl: './file-upload.component.html'
 })
 export class FileUploadComponent {
   @Output() boardLoaded = new EventEmitter<number[][]>();

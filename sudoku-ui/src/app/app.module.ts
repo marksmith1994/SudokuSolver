@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HomeComponent } from './components/home/home.component';
 import { SudokuBoardComponent } from './components/sudoku-board/sudoku-board.component';
 import { AlgorithmSelectorComponent } from './components/algorithm-selector/algorithm-selector.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
@@ -14,6 +15,7 @@ import { ResultsVisualizationComponent } from './components/results-visualizatio
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
     SudokuBoardComponent,
     AlgorithmSelectorComponent,
     FileUploadComponent,

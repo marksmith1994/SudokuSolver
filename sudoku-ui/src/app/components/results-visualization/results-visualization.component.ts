@@ -19,6 +19,10 @@ export interface AlgorithmVisualization {
   isPlaying: boolean;
   speed: number; // steps per second
   totalSteps: number;
+  startTime?: number;
+  endTime?: number;
+  isCompleted: boolean;
+  position?: number;
 }
 
 @Component({
@@ -45,9 +49,7 @@ export class ResultsVisualizationComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log('Visualization component initialized');
     this.puzzle = this.puzzleService.getCurrentPuzzle();
-    console.log('Current puzzle:', this.puzzle);
     this.initializeVisualizations();
   }
 
@@ -58,7 +60,6 @@ export class ResultsVisualizationComponent implements OnInit, OnDestroy {
   }
 
   initializeVisualizations(): void {
-    console.log('Initializing visualizations...');
     // Initialize all algorithms with empty steps
     const algorithmNames = [
       'backtracking',
@@ -75,31 +76,27 @@ export class ResultsVisualizationComponent implements OnInit, OnDestroy {
       currentStep: 0,
       isPlaying: false,
       speed: this.globalSpeed,
-      totalSteps: 0
+      totalSteps: 0,
+      isCompleted: false
     }));
 
     this.selectedAlgorithm = this.algorithms[0]?.algorithm || null;
-    console.log('Algorithms initialized:', this.algorithms.length);
     this.loadVisualizationData();
   }
 
   async loadVisualizationData(): Promise<void> {
     try {
-      console.log('Loading visualization data...');
       // For now, we'll simulate the visualization data
       // In a real implementation, this would come from the API
       this.algorithms.forEach(algorithm => {
         algorithm.steps = this.generateSimulatedSteps(algorithm.algorithm);
         algorithm.totalSteps = algorithm.steps.length;
-        console.log(`Algorithm ${algorithm.algorithm} has ${algorithm.totalSteps} steps`);
       });
 
       this.maxSteps = Math.max(...this.algorithms.map(a => a.totalSteps));
-      console.log('Max steps:', this.maxSteps);
       
       // Auto-start the visualization after a short delay
       setTimeout(() => {
-        console.log('Auto-starting visualization...');
         this.playAll();
       }, 1000);
     } catch (error) {
@@ -134,7 +131,35 @@ export class ResultsVisualizationComponent implements OnInit, OnDestroy {
       steps.push(step);
     });
 
+    // Add final completed solution step
+    const completedBoard = this.getCompletedSolution();
+    const finalStep: VisualizationStep = {
+      algorithm,
+      step: stepNumber + 1,
+      board: completedBoard,
+      description: 'Puzzle solved! Complete solution found.',
+      cellChanges: [],
+      timestamp: Date.now() + ((stepNumber + 1) * 100)
+    };
+    steps.push(finalStep);
+
     return steps;
+  }
+
+  private getCompletedSolution(): number[][] {
+    // This is a sample completed Sudoku solution
+    // In a real implementation, this would be the actual solution
+    return [
+      [5, 3, 4, 6, 7, 8, 9, 1, 2],
+      [6, 7, 2, 1, 9, 5, 3, 4, 8],
+      [1, 9, 8, 3, 4, 2, 5, 6, 7],
+      [8, 5, 9, 7, 6, 1, 4, 2, 3],
+      [4, 2, 6, 8, 5, 3, 7, 9, 1],
+      [7, 1, 3, 9, 2, 4, 8, 5, 6],
+      [9, 6, 1, 5, 3, 7, 2, 8, 4],
+      [2, 8, 7, 4, 1, 9, 6, 3, 5],
+      [3, 4, 5, 2, 8, 6, 1, 7, 9]
+    ];
   }
 
   getAlgorithmPattern(algorithm: string): any[] {
@@ -220,11 +245,20 @@ export class ResultsVisualizationComponent implements OnInit, OnDestroy {
 
   // Playback controls
   playAll(): void {
-    console.log('Starting all algorithms...');
+    // If all algorithms have finished, reset them first
+    const allFinished = this.algorithms.every(alg => alg.currentStep >= alg.totalSteps);
+    if (allFinished) {
+      this.resetAll();
+    }
+    
     this.isGlobalPlaying = true;
+    const startTime = Date.now();
     this.algorithms.forEach(alg => {
       alg.isPlaying = true;
-      console.log(`Algorithm ${alg.algorithm} has ${alg.totalSteps} steps`);
+      alg.startTime = startTime;
+      alg.isCompleted = false;
+      alg.endTime = undefined;
+      alg.position = undefined;
     });
     this.startAnimation();
   }
@@ -239,6 +273,10 @@ export class ResultsVisualizationComponent implements OnInit, OnDestroy {
     this.algorithms.forEach(alg => {
       alg.currentStep = 0;
       alg.isPlaying = false;
+      alg.isCompleted = false;
+      alg.startTime = undefined;
+      alg.endTime = undefined;
+      alg.position = undefined;
     });
     this.isGlobalPlaying = false;
     this.currentTime = 0;
@@ -254,6 +292,10 @@ export class ResultsVisualizationComponent implements OnInit, OnDestroy {
   playAlgorithm(algorithm: string): void {
     const alg = this.algorithms.find(a => a.algorithm === algorithm);
     if (alg) {
+      // If this algorithm has finished, reset it first
+      if (alg.currentStep >= alg.totalSteps) {
+        alg.currentStep = 0;
+      }
       alg.isPlaying = true;
       if (!this.isGlobalPlaying) {
         this.startAnimation();
@@ -302,13 +344,16 @@ export class ResultsVisualizationComponent implements OnInit, OnDestroy {
         if (this.currentTime >= stepInterval) {
           alg.currentStep++;
           this.currentTime = 0;
-          console.log(`Algorithm ${alg.algorithm} at step ${alg.currentStep}/${alg.totalSteps}`);
         }
 
         // Stop if reached the end
         if (alg.currentStep >= alg.totalSteps) {
           alg.isPlaying = false;
-          console.log(`Algorithm ${alg.algorithm} finished`);
+          if (!alg.isCompleted) {
+            alg.isCompleted = true;
+            alg.endTime = Date.now();
+            this.updatePositions();
+          }
         }
       }
     });
@@ -319,22 +364,25 @@ export class ResultsVisualizationComponent implements OnInit, OnDestroy {
       this.animationFrame = requestAnimationFrame((time) => this.animate(time));
     } else {
       this.isGlobalPlaying = false;
-      console.log('All algorithms finished');
     }
   }
 
   // Utility methods
   getCurrentBoard(algorithm: string): number[][] {
     const alg = this.algorithms.find(a => a.algorithm === algorithm);
-    if (alg && alg.steps[alg.currentStep]) {
+    if (alg && alg.steps.length > 0 && alg.currentStep < alg.steps.length) {
       return alg.steps[alg.currentStep].board;
+    }
+    // If algorithm is completed, show the final solution
+    if (alg && alg.isCompleted) {
+      return this.getCompletedSolution();
     }
     return this.puzzle;
   }
 
   getCurrentDescription(algorithm: string): string {
     const alg = this.algorithms.find(a => a.algorithm === algorithm);
-    if (alg && alg.steps[alg.currentStep]) {
+    if (alg && alg.steps.length > 0 && alg.currentStep < alg.steps.length) {
       return alg.steps[alg.currentStep].description;
     }
     return 'Ready to start...';
@@ -352,5 +400,45 @@ export class ResultsVisualizationComponent implements OnInit, OnDestroy {
     return algorithm.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');
+  }
+
+  private updatePositions(): void {
+    const completedAlgorithms = this.algorithms
+      .filter(alg => alg.isCompleted && alg.endTime)
+      .sort((a, b) => (a.endTime! - a.startTime!) - (b.endTime! - b.startTime!));
+
+    completedAlgorithms.forEach((alg, index) => {
+      alg.position = index + 1;
+    });
+  }
+
+  getCompletionTime(algorithm: string): string {
+    const alg = this.algorithms.find(a => a.algorithm === algorithm);
+    if (alg && alg.isCompleted && alg.startTime && alg.endTime) {
+      const timeMs = alg.endTime - alg.startTime;
+      return `${timeMs}ms`;
+    }
+    return '';
+  }
+
+  getPosition(algorithm: string): string {
+    const alg = this.algorithms.find(a => a.algorithm === algorithm);
+    if (alg && alg.isCompleted && alg.position) {
+      return `#${alg.position}`;
+    }
+    return '';
+  }
+
+  getMedalIcon(algorithm: string): string {
+    const alg = this.algorithms.find(a => a.algorithm === algorithm);
+    if (alg && alg.isCompleted && alg.position) {
+      switch (alg.position) {
+        case 1: return '🥇';
+        case 2: return '🥈';
+        case 3: return '🥉';
+        default: return `#${alg.position}`;
+      }
+    }
+    return '';
   }
 } 

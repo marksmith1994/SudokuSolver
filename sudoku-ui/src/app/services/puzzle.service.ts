@@ -11,14 +11,11 @@ export class PuzzleService {
   constructor() {}
 
   setPuzzle(puzzle: number[][]): void {
-    console.log('Setting puzzle in service:', puzzle);
     this.currentPuzzleSubject.next(puzzle);
   }
 
   getCurrentPuzzle(): number[][] {
-    const puzzle = this.currentPuzzleSubject.value;
-    console.log('Getting puzzle from service:', puzzle);
-    return puzzle;
+    return this.currentPuzzleSubject.value;
   }
 
   private getDefaultPuzzle(): number[][] {

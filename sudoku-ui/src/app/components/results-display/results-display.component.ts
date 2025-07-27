@@ -9,8 +9,7 @@ export interface SolveResult {
 
 @Component({
   selector: 'app-results-display',
-  templateUrl: './results-display.component.html',
-  styleUrls: ['./results-display.component.css']
+  templateUrl: './results-display.component.html'
 })
 export class ResultsDisplayComponent {
   @Input() results: SolveResult[] = [];
