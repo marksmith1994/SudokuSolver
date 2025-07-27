@@ -1,76 +1,79 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 sm:p-6 md:p-8">
   <div class="max-w-7xl mx-auto">
     <!-- Header -->
-    <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+    <div class="text-center mb-6 sm:mb-8">
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-3 sm:mb-4">
         Algorithm Visualization
       </h1>
-      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+      <p class="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto px-4">
         Watch how different algorithms solve the same puzzle in real-time. 
         See the step-by-step process and understand how each algorithm works.
       </p>
     </div>
 
     <!-- Global Controls -->
-    <div class="bg-white rounded-xl shadow-xl p-6 mb-8 border border-gray-100">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Global Controls</h2>
-        <div class="flex items-center space-x-4">
+    <div class="bg-white rounded-xl shadow-xl p-4 sm:p-6 mb-6 sm:mb-8 border border-gray-100">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-4 sm:space-y-0">
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Global Controls</h2>
+        <div class="flex flex-wrap items-center gap-2 sm:gap-4">
           <button 
             (click)="playAll()"
             [disabled]="isGlobalPlaying"
-            class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold">
-            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            class="px-3 sm:px-4 md:px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm sm:text-base font-semibold">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 inline mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            Play All
+            <span class="hidden sm:inline">Play All</span>
+            <span class="sm:hidden">Play</span>
           </button>
           <button 
             (click)="pauseAll()"
             [disabled]="!isGlobalPlaying"
-            class="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold">
-            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            class="px-3 sm:px-4 md:px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm sm:text-base font-semibold">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 inline mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            Pause All
+            <span class="hidden sm:inline">Pause All</span>
+            <span class="sm:hidden">Pause</span>
           </button>
           <button 
             (click)="resetAll()"
-            class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all duration-200 font-semibold">
-            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            class="px-3 sm:px-4 md:px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all duration-200 text-sm sm:text-base font-semibold">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 inline mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
             </svg>
-            Reset All
+            <span class="hidden sm:inline">Reset All</span>
+            <span class="sm:hidden">Reset</span>
           </button>
         </div>
       </div>
 
       <!-- Speed Control -->
-      <div class="flex items-center space-x-4">
+      <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
         <label class="text-sm font-semibold text-gray-700">Speed:</label>
-        <div class="flex space-x-2">
+        <div class="flex flex-wrap gap-1 sm:gap-2">
           <button 
             (click)="setSpeed(0.5)"
             [class]="globalSpeed === 0.5 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'"
-            class="px-3 py-1 rounded text-sm font-medium transition-all duration-200">
+            class="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium transition-all duration-200">
             0.5x
           </button>
           <button 
             (click)="setSpeed(1)"
             [class]="globalSpeed === 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'"
-            class="px-3 py-1 rounded text-sm font-medium transition-all duration-200">
+            class="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium transition-all duration-200">
             1x
           </button>
           <button 
             (click)="setSpeed(2)"
             [class]="globalSpeed === 2 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'"
-            class="px-3 py-1 rounded text-sm font-medium transition-all duration-200">
+            class="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium transition-all duration-200">
             2x
           </button>
           <button 
             (click)="setSpeed(5)"
             [class]="globalSpeed === 5 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'"
-            class="px-3 py-1 rounded text-sm font-medium transition-all duration-200">
+            class="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium transition-all duration-200">
             5x
           </button>
         </div>
@@ -78,7 +81,7 @@
     </div>
 
     <!-- Algorithm Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
       <div 
         *ngFor="let algorithm of algorithms"
         class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
