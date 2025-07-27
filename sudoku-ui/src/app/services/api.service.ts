@@ -10,7 +10,8 @@ export class ApiService {
 
   // Update this URL to point to your C# backend API
   // For Docker development, use port 5001 (mapped from container port 5000)
-  private apiUrl = 'http://localhost:5001/api';
+  // For Azure deployment, use the Azure API URL
+  private apiUrl = 'https://sudoku-solver.azurewebsites.net/api';
 
   constructor(private http: HttpClient) { }
 

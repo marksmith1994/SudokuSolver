@@ -12,7 +12,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins(
+                "http://localhost:4200",
+                "https://sudoku-solver-ui.azurewebsites.net",
+                "https://sudoku-solver-ui-agf2fxebeycza2c7.uksouth-01.azurewebsites.net"
+              )
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -21,11 +25,9 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Enable Swagger in both Development and Production for Azure deployment
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAngular");
